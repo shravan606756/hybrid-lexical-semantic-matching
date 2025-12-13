@@ -1,5 +1,5 @@
 import re
-from typing import Dict, List
+from typing import Dict
 from collections import defaultdict
 
 SECTION_HEADINGS = [
@@ -17,13 +17,36 @@ SECTION_HEADINGS = [
 ]
 
 COMMON_SKILLS = [
-    "python", "java", "c++", "c", "sql", "postgresql", "mysql", "mongodb",
-    "pandas", "numpy", "scikit-learn", "tensorflow", "pytorch", "keras",
-    "nlp", "spacy", "transformers", "docker", "aws", "azure",
-    "html", "css", "javascript", "react", "git", "linux", "bash",
+    "python",
+    "java",
+    "c++",
+    "c",
+    "sql",
+    "mysql",
+    "postgresql",
+    "mongodb",
+    "machine learning",
+    "deep learning",
+    "data structures",
+    "algorithms",
+    "pandas",
+    "numpy",
+    "scikit-learn",
+    "tensorflow",
+    "pytorch",
+    "nlp",
+    "docker",
+    "aws",
+    "azure",
+    "html",
+    "css",
+    "javascript",
+    "react",
+    "git",
+    "linux"
 ]
 
-def _find_headings(lines: List[str]):
+def _find_headings(lines):
     headings = []
     for i, ln in enumerate(lines):
         s = ln.strip().lower()
@@ -34,65 +57,60 @@ def _find_headings(lines: List[str]):
                 break
     return headings
 
-def segment_by_headings(text: str) -> Dict[str, str]:
-    lines = [l for l in text.splitlines()]
+def segment_by_headings(text: str):
+    lines = text.splitlines()
     headings = _find_headings(lines)
     sections = defaultdict(list)
+
     if not headings:
-        sections['full'] = text
+        sections["full"] = text
         return sections
 
     indices = [idx for idx, _ in headings] + [len(lines)]
-    for j in range(len(headings)):
-        idx, h = headings[j]
+
+    for i in range(len(headings)):
+        idx, h = headings[i]
         start = idx + 1
-        end = indices[j+1]
+        end = indices[i + 1]
         body = "\n".join(lines[start:end]).strip()
-        key = re.sub(r"[^a-z0-9]", "_", h).strip('_')
+        key = re.sub(r"[^a-z0-9]", "_", h).strip("_")
         sections[key] = body
+
     return sections
 
-def extract_skills_from_text(text: str) -> List[str]:
-    tokens = re.findall(r"[A-Za-z\+\#\.\-]+", text.lower())
+def extract_skills_from_text(text: str):
+    text = text.lower()
     found = []
-    skills_set = set([s.lower() for s in COMMON_SKILLS])
-    for t in tokens:
-        if t in skills_set:
-            found.append(t)
-    seen = set()
-    out = []
-    for s in found:
-        if s not in seen:
-            out.append(s)
-            seen.add(s)
-    return out
+
+    for skill in COMMON_SKILLS:
+        if skill in text:
+            found.append(skill)
+
+    return list(dict.fromkeys(found))
 
 def extract_sections(text: str) -> Dict[str, object]:
-    """
-    Returns dict with keys for found sections. Example:
-    {
-      'skills': {'raw': '...', 'skills_list': ['python','sql']},
-      'experience': {'raw': '...'},
-      'education': {'raw': '...'}
-    }
-    """
     if not text:
         return {}
-    text = text.replace('\r\n', '\n')
+
+    text = text.replace("\r\n", "\n")
     segs = segment_by_headings(text)
     out = {}
-    for k, v in segs.items():
-        if 'skill' in k:
-            out['skills'] = {'raw': v, 'skills_list': extract_skills_from_text(v)}
-        elif 'experience' in k or 'employment' in k or 'professional' in k:
-            out['experience'] = {'raw': v}
-        elif 'education' in k or 'academic' in k:
-            out['education'] = {'raw': v}
-        else:
-            out[k] = {'raw': v}
 
-    if 'skills' not in out:
+    for k, v in segs.items():
+        if "skill" in k:
+            out["skills"] = {
+                "raw": v,
+                "skills_list": extract_skills_from_text(v)
+            }
+        elif "experience" in k or "employment" in k:
+            out["experience"] = {"raw": v}
+        elif "education" in k or "academic" in k:
+            out["education"] = {"raw": v}
+        else:
+            out[k] = {"raw": v}
+
+    if "skills" not in out:
         inferred = extract_skills_from_text(text)
-        out['skills'] = {'raw': '', 'skills_list': inferred}
+        out["skills"] = {"raw": "", "skills_list": inferred}
 
     return out
