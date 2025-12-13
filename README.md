@@ -47,32 +47,12 @@ The focus of this project is:
 
 ## Project Structure
 
-resume-analyzer/
-│
-├── app/
-│ └── main.py
-│ # Streamlit entry point and application logic
-│
-├── utils/
-│ ├── pdf_parser.py
-│ │ # Extracts raw text from PDF resumes
-│ │
-│ ├── text_cleaning.py
-│ │ # Text normalization, tokenization, and stopword removal
-│ │
-│ ├── scoring.py
-│ │ # TF-IDF vectorization and cosine similarity scoring
-│ │
-│ └── section_extraction.py
-│ # Resume section segmentation and skill extraction
-│
-├── ui/
-│ └── charts.py
-│ # Visualization utilities
-│
-├── requirements.txt
-├── README.md
-└── .gitignore
+app/main.py              → Streamlit entry point  
+utils/pdf_parser.py     → Extracts text from resumes  
+utils/text_cleaning.py  → Cleans and normalizes text  
+utils/scoring.py        → TF-IDF + similarity scoring  
+utils/section_extraction.py → Section & skill extraction  
+ui/charts.py            → Visualizations.
 
 
 ---
