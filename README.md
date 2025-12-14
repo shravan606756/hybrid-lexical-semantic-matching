@@ -1,34 +1,53 @@
-# Resume Analyzer
+# Hybrid Lexical–Semantic Matching with Explainability and Feedback
 
-A Streamlit-based NLP application for batch resume screening that ranks resumes against a job description using semantic similarity, section extraction, and skill identification.
+A hybrid candidate–role matching system that integrates **lexical relevance modeling** and
+**semantic similarity estimation** to rank resumes against a job description, provide
+sentence-level explainability, and generate deterministic resume improvement feedback.
 
-The system is designed to be lightweight, interpretable, and practical for small-scale resume analysis (10–20 resumes), avoiding black-box models while maintaining meaningful relevance scoring.
-
----
-
-## Overview
-
-Resume screening is often manual, subjective, and time-consuming. This project automates the initial screening step by analyzing resumes in PDF format and ranking them based on their relevance to a provided job description.
-
-The focus of this project is:
-- Clear NLP pipeline design
-- Explainable scoring logic
-- Modular and extensible architecture
+The system is implemented as an **interpretable NLP pipeline**, prioritizing transparency,
+modularity, and controllable decision logic over black-box end-to-end models.
 
 ---
 
-## Features
+## System Architecture
 
-- Upload and process multiple resume PDFs in one batch
-- Robust text extraction from PDF files
-- Text preprocessing including normalization, tokenization, and stopword removal
-- TF-IDF based semantic representation using unigrams and bigrams
-- Cosine similarity scoring between resumes and job description
-- Resume ranking based on match percentage
-- Resume section extraction (skills, experience, education)
-- Skill identification using a predefined technical skill vocabulary
-- Visual ranking using horizontal bar charts
-- CSV export of ranked results
+![System Architecture](architecture.png)
+
+---
+
+## Methodology
+
+The system follows a multi-stage hybrid matching pipeline:
+
+### 1. Lexical Matching
+- Resume and job description texts are vectorized using TF-IDF with unigram and bigram features.
+- Lexical relevance is computed using cosine similarity.
+
+### 2. Semantic Matching
+- Sentence-level transformer embeddings are generated using a lightweight MiniLM model.
+- Semantic relevance is computed via cosine similarity in embedding space.
+
+### 3. Hybrid Scoring
+- Lexical and semantic scores are combined using weighted linear aggregation.
+- Enables controlled trade-offs between keyword overlap and contextual similarity.
+
+### 4. Explainability Layer
+- Resume sentences are ranked by semantic similarity to the job description.
+- Top contributing sentences are surfaced to justify ranking decisions.
+
+### 5. Feedback Generation
+- Skill gaps are identified via set-based comparison between resume and job description skills.
+- Section-level relevance scores detect weak resume areas.
+- Deterministic rules generate actionable resume improvement suggestions.
+
+---
+
+## Design Rationale
+
+- A hybrid lexical–semantic approach balances precision (keyword relevance) and recall (contextual meaning).
+- Transformer embeddings are used strictly for representation, not generation.
+- Rule-based feedback preserves explainability and deterministic behavior.
+- Optimized for small-batch resume screening (10–20 resumes).
 
 ---
 
@@ -36,25 +55,30 @@ The focus of this project is:
 
 1. User uploads multiple resume PDFs and provides a job description
 2. Text is extracted from each resume
-3. Text is cleaned and preprocessed
-4. TF-IDF vectorizer is trained on resumes and job description
-5. Cosine similarity is computed for each resume
-6. Resumes are ranked based on similarity score
-7. Sections and skills are extracted from the top-ranked resume
-8. Results are displayed in tabular and visual form
+3. Text is cleaned and normalized
+4. Lexical and semantic relevance are computed in parallel
+5. Hybrid scores are aggregated
+6. Resumes are ranked by final relevance score
+7. Explainability and skill-gap analysis are applied to top-ranked resumes
+8. Results are visualized and exported
 
 ---
 
 ## Project Structure
 
-app/main.py              → Streamlit entry point  
-utils/pdf_parser.py     → Extracts text from resumes  
-utils/text_cleaning.py  → Cleans and normalizes text  
-utils/scoring.py        → TF-IDF + similarity scoring  
-utils/section_extraction.py → Section & skill extraction  
-ui/charts.py            → Visualizations.
-
-
+app/
+├── main.py # Streamlit entry point
+├── ui/
+│ └── charts.py # Visualization logic
+└── utils/
+├── pdf_parser.py # PDF text extraction
+├── text_cleaning.py # Text preprocessing
+├── scoring.py # TF-IDF + similarity scoring
+├── embedding_scoring.py# Semantic embedding scoring
+├── section_extraction.py
+├── section_scoring.py
+├── explainability.py # Sentence-level explanations
+└── suggestions.py # Resume improvement feedback
 ---
 
 ## Technologies Used
@@ -64,6 +88,7 @@ ui/charts.py            → Visualizations.
 - Scikit-learn
   - TF-IDF Vectorizer
   - Cosine Similarity
+- Sentence-Transformers (MiniLM)
 - Pandas
 - Matplotlib
 - PyPDF2
@@ -74,67 +99,90 @@ ui/charts.py            → Visualizations.
 
 ### Text Processing
 - Case normalization
-- Removal of non-essential characters
+- Noise and punctuation removal
 - Lightweight tokenization
-- Stopword removal using a custom minimal stopword set
+- Custom minimal stopword filtering
 
 ### Vectorization
-- TF-IDF vectorization with unigram and bigram support
+- TF-IDF with unigram and bigram support
 - Vocabulary learned jointly from resumes and job description
 
 ### Scoring
-- Cosine similarity between each resume vector and job description vector
-- Similarity score scaled to percentage for interpretability
+- Cosine similarity between resume and job description vectors
+- Scores scaled to percentage for interpretability
 
-### Section Extraction
-- Heuristic-based heading detection for common resume sections
-- Skill extraction using a curated list of technical skills
-- Fallback inference when explicit section headings are missing
+### Section and Skill Extraction
+- Heuristic-based section heading detection
+- Skill extraction using a curated technical skill vocabulary
+- Fallback inference when explicit headings are missing
 
 ---
 
 ## How to Run Locally
 
 1. Clone the repository:
-git clone https://github.com/shravan606756/resume-analyzer.git
+   ```bash
+   git clone https://github.com/shravan606756/hybrid-lexical-semantic-matching.git
+   cd hybrid-lexical-semantic-matching
 
-2. Install dependencies:
+2. Create and activate virtual environment:
+  ```bash
+  python -m venv .venv
+.\.venv\Scripts\Activate.ps1
 
+3.Install dependencies:
+  ```bash
+  pip install -r requirements.txt
 
-3. Run the application:
+4. Run the application:
+  ```bash
+  streamlit run app/main.py
 
-4. Upload resume PDFs and paste a job description to analyze.
+Use Cases
+
+Resume shortlisting for internships and entry-level roles
+
+Skill relevance analysis for students
+
+Demonstration of applied NLP system design
+
+Academic mini-project or placement portfolio project
+
+Limitations
+
+Skill extraction depends on a predefined vocabulary
+
+Section detection is heuristic-based
+
+Not intended for large-scale enterprise ATS systems
+
+Future Enhancements
+
+Section-wise similarity weighting
+
+Custom skill vocabulary input
+
+Resume-to-resume similarity detection
+
+Highlighting matched keywords in resumes
+
+Author
+
+Developed as an applied Natural Language Processing project with emphasis on
+interpretable scoring, modular design, and explainable decision-making.
 
 ---
 
-## Use Cases
+## 3️⃣ Final checklist before commit
 
-- Resume shortlisting for internships or entry-level roles
-- Skill relevance analysis for students
-- Demonstration of applied NLP concepts
-- Academic mini-project or placement portfolio project
+- [ ] `architecture.png` in repo root  
+- [ ] README updated  
+- [ ] Repo name updated  
+- [ ] Code builds and runs  
 
----
+Then commit:
 
-## Limitations
-
-- Skill extraction depends on a predefined skill list
-- Section detection is heuristic-based and may vary across resume formats
-- Not intended for large-scale enterprise ATS systems
-- Does not use transformer-based embeddings by design
-
----
-
-## Future Enhancements
-
-- Section-wise similarity scoring (skills vs experience vs education)
-- Custom skill vocabulary input
-- Optional embedding-based semantic matching
-- Keyword-level match highlighting
-- Resume-to-resume similarity detection
-
----
-
-## Author
-
-Developed as an applied Natural Language Processing project focusing on practical resume analysis, modular design, and explainable scoring.
+```bash
+git add README.md architecture.png
+git commit -m "Add system architecture and technical README"
+git push
