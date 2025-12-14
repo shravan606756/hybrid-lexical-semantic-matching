@@ -61,25 +61,6 @@ The system follows a multi-stage hybrid matching pipeline:
 6. Resumes are ranked by final relevance score
 7. Explainability and skill-gap analysis are applied to top-ranked resumes
 8. Results are visualized and exported
-
----
-## Project Structure
-
-
-*** app/
-├── main.py                  # Streamlit entry point
-├── ui/
-│   └── charts.py            # Visualization logic
-└── utils/
-    ├── pdf_parser.py        # PDF text extraction
-    ├── text_cleaning.py     # Text preprocessing
-    ├── scoring.py           # TF-IDF + similarity scoring
-    ├── embedding_scoring.py # Semantic embedding scoring
-    ├── section_extraction.py
-    ├── section_scoring.py
-    ├── explainability.py    # Sentence-level explanations
-    └── suggestions.py       # Resume improvement feedback
-    ***
     
 ---
 
