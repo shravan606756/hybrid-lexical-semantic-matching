@@ -126,63 +126,36 @@ app/
    cd hybrid-lexical-semantic-matching
 
 2. Create and activate virtual environment:
-  ```bash
-  python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-
-3.Install dependencies:
-  ```bash
-  pip install -r requirements.txt
-
+   ```bash
+      python -m venv .venv
+    .\.venv\Scripts\Activate.ps1
+   
+3. Install dependencies:
+   ```bash
+     pip install -r requirements.txt
+   
 4. Run the application:
-  ```bash
-  streamlit run app/main.py
+   ```bash
+     streamlit run app/main.py
 
-Use Cases
+---
+## Use Cases
 
-Resume shortlisting for internships and entry-level roles
-
-Skill relevance analysis for students
-
-Demonstration of applied NLP system design
-
-Academic mini-project or placement portfolio project
-
-Limitations
-
-Skill extraction depends on a predefined vocabulary
-
-Section detection is heuristic-based
-
-Not intended for large-scale enterprise ATS systems
-
-Future Enhancements
-
-Section-wise similarity weighting
-
-Custom skill vocabulary input
-
-Resume-to-resume similarity detection
-
-Highlighting matched keywords in resumes
-
-Author
-
-Developed as an applied Natural Language Processing project with emphasis on
-interpretable scoring, modular design, and explainable decision-making.
+- Resume shortlisting for internships and entry-level roles
+- Skill relevance analysis for students
+- Applied NLP system design demonstration
+- Academic mini-project or placement portfolio project
 
 ---
 
-## 3️⃣ Final checklist before commit
+## Limitations
 
-- [ ] `architecture.png` in repo root  
-- [ ] README updated  
-- [ ] Repo name updated  
-- [ ] Code builds and runs  
+- Skill extraction depends on a predefined vocabulary
+- Section detection is heuristic-based
+- Not intended for large-scale enterprise ATS systems
 
-Then commit:
+---
 
-```bash
-git add README.md architecture.png
-git commit -m "Add system architecture and technical README"
-git push
+## Author
+Developed as an applied Natural Language Processing project with emphasis on
+interpretable scoring, modular design, and explainable decision-making.
