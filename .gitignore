@@ -1,18 +1,46 @@
+# --------------------
 # Python cache
+# --------------------
 __pycache__/
-*.pyc
-*.pyo
+*.py[cod]
+*$py.class
 
-# Virtual environment
+# --------------------
+# Virtual environments
+# --------------------
 venv/
 .venv/
 
-# VS Code
-.vscode/
+# --------------------
+# Environment variables
+# --------------------
+.env
 
+# --------------------
+# IDE / Editor
+# --------------------
+.vscode/
+.idea/
+
+# --------------------
 # Streamlit
+# --------------------
 .streamlit/
 
+# --------------------
 # OS files
+# --------------------
 .DS_Store
 Thumbs.db
+
+# --------------------
+# Logs & temp files
+# --------------------
+*.log
+*.tmp
+
+# --------------------
+# Model / cache files
+# --------------------
+.cache/
+huggingface/
